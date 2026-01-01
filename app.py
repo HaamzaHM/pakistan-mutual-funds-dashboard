@@ -45,56 +45,6 @@ def load_css():
 
 load_css()
 
-# Theme Toggle in Sidebar
-def setup_theme_toggle():
-    """Add theme toggle button to sidebar"""
-    st.sidebar.markdown("---")
-    col1, col2 = st.sidebar.columns([1, 1])
-    
-    with col1:
-        if st.button("☀️ Light", key="light_theme", use_container_width=True):
-            st.session_state.theme = "light"
-            st.rerun()
-    
-    with col2:
-        if st.button("🌙 Dark", key="dark_theme", use_container_width=True):
-            st.session_state.theme = "dark"
-            st.rerun()
-
-# Initialize theme in session state
-if 'theme' not in st.session_state:
-    st.session_state.theme = "auto"
-
-# Apply theme CSS
-if st.session_state.theme == "light":
-    st.markdown("""
-        <style>
-            :root {
-                --primary-color: #667eea;
-                --background-color: #ffffff;
-                --text-color: #000000;
-            }
-            body, .main {
-                background-color: #ffffff;
-                color: #000000;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-elif st.session_state.theme == "dark":
-    st.markdown("""
-        <style>
-            :root {
-                --primary-color: #667eea;
-                --background-color: #0e1117;
-                --text-color: #ffffff;
-            }
-            body, .main {
-                background-color: #0e1117;
-                color: #ffffff;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
 @st.cache_data
 def load_csv():
     """Load CSV file from data folder - prefer cleaned file"""
@@ -184,9 +134,6 @@ def reset_filters():
     st.session_state.current_page = 1
 
 def main():
-    # Setup theme toggle
-    setup_theme_toggle()
-    
     # Load data
     df, filename = load_csv()
     
