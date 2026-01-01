@@ -2,6 +2,9 @@
 
 An interactive, open-source Streamlit dashboard for exploring and analyzing mutual funds data from Pakistan. Featuring dynamic filtering, pagination, comprehensive analytics, and real-time data visualization based on official MUFAP data.
 
+## 🌐 Live Demo
+**👉 [View Live Dashboard](https://pakistan-mutual-funds-dashboard.streamlit.app/)** 
+
 **🔗 Data Source:** [MUFAP - Mutual Funds Association of Pakistan](https://www.mufap.com.pk/Industry/IndustryStatDaily?tab=1) (Publicly Available)
 
 **📧 Contact & Questions:** 

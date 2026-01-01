@@ -1,5 +1,5 @@
 """
-Interactive Mutual Funds Dashboard
+Interactive Pakistan Mutual Funds Dashboard
 A professional Streamlit application for exploring mutual fund data with advanced filtering and analytics.
 """
 
@@ -164,7 +164,7 @@ def main():
         col_map['risk_level'] = 'Risk Level'  # Use converted column
     
     # Header
-    st.title("📊 Mutual Funds Dashboard")
+    st.title("📊 Pakistan Mutual Funds Dashboard")
     st.markdown(f"**Data Source:** {filename} | **Total Records:** {len(df)}")
     
     # Initialize session state
