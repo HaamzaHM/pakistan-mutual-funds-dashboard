@@ -193,8 +193,8 @@ def show_fund_performance_analysis(fund_name, performance_df):
     # Get fund details
     fund_row = fund_data.iloc[0]
     
-    # Display metrics (Removed Rating and Benchmark)
-    col1, col2, col3 = st.columns(3)
+    # Display metrics (Removed Rating, Benchmark, and Category)
+    col1, col2 = st.columns(2)
     
     with col1:
         try:
@@ -204,9 +204,6 @@ def show_fund_performance_analysis(fund_name, performance_df):
             st.metric("NAV", "N/A")
     
     with col2:
-        st.metric("Category", str(fund_row['Category']) if 'Category' in fund_row else "N/A")
-    
-    with col3:
         validity = str(fund_row['Validity Date']) if 'Validity Date' in fund_row else "N/A"
         st.metric("Validity Date", validity)
     
@@ -525,7 +522,7 @@ def main():
     # Tabs for different views - Reordered: Performance Analysis first
     tab1, tab2, tab3, tab4 = st.tabs([
         "📈 Performance Analysis",
-        "� Data Table",
+        "📋 Data Table",
         "📊 Analytics",
         "⚠️ By Risk"
     ])
