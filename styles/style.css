@@ -1,30 +1,50 @@
 /* Main Layout */
 .main {
-    padding-top: 1rem;
+    padding-top: 0.5rem;
 }
 
-/* Metric Container Styling */
+/* Title Styling */
+h1 {
+    font-size: 24px !important;
+    margin-bottom: 5px !important;
+}
+
+/* Metric Container Styling - Compact Version */
 .metric-container {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     color: white;
-    padding: 1.5rem;
-    border-radius: 0.8rem;
-    margin: 0.5rem 0;
+    padding: 12px 15px !important;
+    border-radius: 0.6rem !important;
+    margin: 2px 0 !important;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 12px !important;
 }
 
 .metric-value {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 0.5rem 0;
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin: 2px 0 !important;
 }
 
 .metric-label {
-    font-size: 0.9rem;
-    opacity: 0.9;
+    font-size: 10px !important;
+    opacity: 0.9 !important;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-bottom: 2px !important;
+}
+
+/* Tabs Styling */
+.stTabs [data-baseweb="tab-list"] button {
+    font-size: 16px !important;
+    padding: 12px 20px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px !important;
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 15px !important;
 }
 
 /* Pagination Styling */

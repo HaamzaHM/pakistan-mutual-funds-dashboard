@@ -29,17 +29,20 @@ def load_css():
         with open("styles/style.css", "r") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
     except FileNotFoundError:
-        # Fallback inline CSS
+        # Fallback inline CSS - Compact version
         st.markdown("""
             <style>
-                .main { padding-top: 1rem; }
+                .main { padding-top: 0.5rem; }
+                h1 { font-size: 24px !important; margin-bottom: 5px !important; }
                 .metric-container {
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white; padding: 1.5rem; border-radius: 0.8rem;
-                    margin: 0.5rem 0; text-align: center;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+                    color: white; padding: 12px 15px !important; border-radius: 0.6rem !important;
+                    margin: 2px 0 !important; text-align: center; font-size: 12px !important;
                 }
-                .metric-value { font-size: 2rem; font-weight: bold; margin: 0.5rem 0; }
-                .metric-label { font-size: 0.9rem; opacity: 0.9; text-transform: uppercase; }
+                .metric-value { font-size: 16px !important; font-weight: bold !important; margin: 2px 0 !important; }
+                .metric-label { font-size: 10px !important; opacity: 0.9 !important; text-transform: uppercase; margin-bottom: 2px !important; }
+                .stTabs [data-baseweb="tab-list"] button { font-size: 16px !important; padding: 12px 20px !important; font-weight: 600 !important; }
+                .stTabs [data-baseweb="tab-list"] { gap: 15px !important; }
                 [data-testid="stSelectbox"] label { display: none !important; }
             </style>
         """, unsafe_allow_html=True)
