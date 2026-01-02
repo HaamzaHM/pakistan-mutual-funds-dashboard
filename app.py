@@ -7,6 +7,7 @@ import streamlit as st
 import pandas as pd
 from pathlib import Path
 import math
+import plotly.graph_objects as go
 from config import (
     APP_TITLE, APP_ICON, APP_LAYOUT, SIDEBAR_STATE,
     ITEMS_PER_PAGE, RISK_ORDER, RISK_RATING_MAPPINGS,
@@ -132,6 +133,146 @@ def reset_filters():
     st.session_state.nav_range = [0, 100]
     st.session_state.search_term = ""
     st.session_state.current_page = 1
+    st.session_state.selected_tab = 0  # Initialize selected tab to first tab
+
+def load_performance_data():
+    """Load performance data from the summary CSV"""
+    try:
+        performance_file = Path("data") / "Performance Summary  MUTUAL FUNDS ASSOCIATION OF PAKISTAN.csv"
+        if performance_file.exists():
+            # Skip the first row which is a title row
+            df = pd.read_csv(performance_file, skiprows=1)
+            return df
+    except Exception as e:
+        st.warning(f"Could not load performance data: {e}")
+    return None
+
+def show_fund_performance_analysis(fund_name, performance_df):
+    """Display interactive fund performance analysis with line chart"""
+    st.markdown("---")
+    st.subheader(f"📈 {fund_name} - Performance Analysis")
+    
+    # Filter performance data for selected fund
+    fund_data = performance_df[performance_df['Fund Name'] == fund_name]
+    
+    if fund_data.empty:
+        st.warning(f"Performance data not available for {fund_name}")
+        return
+    
+    # Performance columns available
+    performance_columns = ['YTD', 'MTD', '1 Day', '15 Days', '30 Days', 
+                          '90 Days', '180 Days', '270 Days', '365 Days', '2 Years', '3 Years']
+    
+    # Filter only available columns
+    available_columns = [col for col in performance_columns if col in performance_df.columns]
+    
+    # Initialize session state for selected period (default to 3 Years)
+    if 'selected_fund' not in st.session_state or st.session_state.selected_fund != fund_name:
+        st.session_state.selected_fund = fund_name
+        st.session_state.selected_period = '3 Years'
+    
+    # Time period buttons with highlighting
+    st.markdown("**Select Time Period:**")
+    button_cols = st.columns(len(available_columns))
+    
+    for idx, col_name in enumerate(available_columns):
+        with button_cols[idx]:
+            # Check if this button is the selected period
+            is_selected = col_name == st.session_state.selected_period
+            
+            # Create button with different styling if selected
+            if is_selected:
+                if st.button(f"✓ {col_name}", key=f"perf_{fund_name}_{col_name}", use_container_width=True):
+                    st.session_state.selected_period = col_name
+            else:
+                if st.button(col_name, key=f"perf_{fund_name}_{col_name}", use_container_width=True):
+                    st.session_state.selected_period = col_name
+    
+    selected_period = st.session_state.selected_period
+    
+    # Get fund details
+    fund_row = fund_data.iloc[0]
+    
+    # Display metrics (Removed Rating and Benchmark)
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        try:
+            nav_value = float(fund_row['NAV']) if 'NAV' in fund_row and pd.notna(fund_row['NAV']) else None
+            st.metric("NAV", f"Rs. {nav_value:.2f}" if nav_value else "N/A")
+        except:
+            st.metric("NAV", "N/A")
+    
+    with col2:
+        st.metric("Category", str(fund_row['Category']) if 'Category' in fund_row else "N/A")
+    
+    with col3:
+        validity = str(fund_row['Validity Date']) if 'Validity Date' in fund_row else "N/A"
+        st.metric("Validity Date", validity)
+    
+    # Display the selected period value
+    if selected_period in performance_df.columns:
+        perf_value = fund_row[selected_period]
+        if pd.notna(perf_value):
+            try:
+                perf_float = float(perf_value)
+                st.markdown(f"**{selected_period} Return:** `{perf_float:.2f}%`")
+            except:
+                st.markdown(f"**{selected_period} Return:** `{perf_value}`")
+        else:
+            st.markdown(f"**{selected_period} Return:** `N/A`")
+    
+    # Create LINE CHART showing all periods with highlighted selected period
+    st.markdown(f"**Performance Data - {selected_period}:**")
+    
+    # Prepare data for all periods
+    periods = available_columns
+    values = []
+    for period in periods:
+        try:
+            val = float(fund_row[period]) if period in fund_row.index and pd.notna(fund_row[period]) else 0
+            values.append(val)
+        except:
+            values.append(0)
+    
+    fig = go.Figure()
+    
+    # Add line trace for all data
+    fig.add_trace(go.Scatter(
+        x=periods,
+        y=values,
+        mode='lines+markers',
+        name=fund_name,
+        line=dict(color='#667eea', width=3),
+        marker=dict(size=8),
+        hovertemplate='<b>%{x}</b><br>Return: %{y:.2f}%<extra></extra>'
+    ))
+    
+    # Highlight the selected period with a special marker
+    selected_idx = periods.index(selected_period) if selected_period in periods else 0
+    selected_value = values[selected_idx] if selected_idx < len(values) else 0
+    
+    fig.add_trace(go.Scatter(
+        x=[selected_period],
+        y=[selected_value],
+        mode='markers',
+        marker=dict(size=15, color='#FF6B6B', symbol='star'),
+        name='Selected Period',
+        hovertemplate='<b>%{x}</b><br>Return: %{y:.2f}%<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title=f"{fund_name} - Performance Across Time Periods",
+        xaxis_title="Time Period",
+        yaxis_title="Return (%)",
+        hovermode='x unified',
+        height=450,
+        template='plotly_white'
+    )
+    
+    st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown("---")
 
 def main():
     # Load data
@@ -366,15 +507,63 @@ def main():
     
     st.markdown("---")
     
-    # Tabs for different views
-    tab1, tab2, tab3 = st.tabs([
-        "📋 Data Table",
+    # Add custom CSS for bigger tabs
+    st.markdown("""
+        <style>
+        .stTabs [data-baseweb="tab-list"] button {
+            font-size: 18px !important;
+            padding: 15px 25px !important;
+            font-weight: 600 !important;
+            letter-spacing: 0.5px !important;
+        }
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 20px !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Tabs for different views - Reordered: Performance Analysis first
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "📈 Performance Analysis",
+        "� Data Table",
         "📊 Analytics",
         "⚠️ By Risk"
     ])
     
-    # ==================== TAB 1: PAGINATED DATA TABLE ====================
+    # Update session state when tabs change
+    tabs = [tab1, tab2, tab3, tab4]
+    
+    # Track which tab is currently active
+    if 'selected_tab' not in st.session_state:
+        st.session_state.selected_tab = 0
+    
+    # ==================== TAB 1: PERFORMANCE ANALYSIS ====================
     with tab1:
+        st.subheader("📈 Interactive Fund Performance Analysis")
+        
+        # Load performance data
+        performance_df = load_performance_data()
+        
+        if performance_df is not None:
+            st.info("📌 Select a fund to view detailed performance analysis with interactive charts")
+            
+            # Fund selector
+            available_funds = sorted(performance_df['Fund Name'].unique().tolist())
+            
+            selected_fund = st.selectbox(
+                "🔍 Select a Fund for Analysis:",
+                available_funds,
+                key="fund_selector"
+            )
+            
+            if selected_fund:
+                # Show performance analysis
+                show_fund_performance_analysis(selected_fund, performance_df)
+        else:
+            st.warning("⚠️ Performance data file not found. Please ensure 'Performance Summary  MUTUAL FUNDS ASSOCIATION OF PAKISTAN.csv' exists in the data folder.")
+    
+    # ==================== TAB 2: PAGINATED DATA TABLE ====================
+    with tab2:
         st.subheader("📋 Fund Data ")
         
         # Pagination logic
@@ -478,8 +667,8 @@ def main():
                 use_container_width=True
             )
     
-    # ==================== TAB 2: ANALYTICS ====================
-    with tab2:
+    # ==================== TAB 3: ANALYTICS ====================
+    with tab3:
         st.subheader("📊 Data Analytics")
         
         col1, col2 = st.columns(2)
@@ -505,8 +694,8 @@ def main():
             top_nav = filtered_df.nlargest(10, nav_col)[[fund_col, nav_col]]
             st.dataframe(top_nav, use_container_width=True, hide_index=True)
     
-    # ==================== TAB 3: BY RISK ====================
-    with tab3:
+    # ==================== TAB 4: BY RISK ====================
+    with tab4:
         st.subheader("⚠️ Analysis by Risk Rating")
         
         if risk_col:
