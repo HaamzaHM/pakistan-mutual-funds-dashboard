@@ -547,18 +547,25 @@ def main():
         if performance_df is not None:
             st.info("📌 Select a fund to view detailed performance analysis with interactive charts")
             
-            # Fund selector
-            available_funds = sorted(performance_df['Fund Name'].unique().tolist())
+            # Apply the same filters as the Data Table to Performance Analysis
+            # Filter performance data based on the filtered_df (which has all filters applied)
+            available_funds = sorted(filtered_df[fund_col].unique().tolist())
             
-            selected_fund = st.selectbox(
-                "🔍 Select a Fund for Analysis:",
-                available_funds,
-                key="fund_selector"
-            )
+            # Only show funds that exist in both filtered_df and performance_df
+            available_funds = [f for f in available_funds if f in performance_df['Fund Name'].values]
             
-            if selected_fund:
-                # Show performance analysis
-                show_fund_performance_analysis(selected_fund, performance_df)
+            if available_funds:
+                selected_fund = st.selectbox(
+                    "🔍 Select a Fund for Analysis:",
+                    available_funds,
+                    key="fund_selector"
+                )
+                
+                if selected_fund:
+                    # Show performance analysis
+                    show_fund_performance_analysis(selected_fund, performance_df)
+            else:
+                st.warning("⚠️ No funds match the selected filters. Please adjust your filter selections.")
         else:
             st.warning("⚠️ Performance data file not found. Please ensure 'Performance Summary  MUTUAL FUNDS ASSOCIATION OF PAKISTAN.csv' exists in the data folder.")
     
