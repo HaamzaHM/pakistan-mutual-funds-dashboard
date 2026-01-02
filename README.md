@@ -69,12 +69,25 @@ Your CSV needs these columns (case-insensitive):
 
 ## ✨ Features
 
-- **� Paginated Data Table** - Browse 50 funds per page with sorting capabilities
-- **� Dynamic Filters** - Filter by fund name, category, company, risk level, and NAV range
+### Dashboard Page
+- **📋 Paginated Data Table** - Browse 50 funds per page with sorting capabilities
+- **🔍 Dynamic Filters** - Filter by fund name, category, company, risk level, and NAV range
 - **📊 Analytics Dashboard** - Visualize distributions and top-performing funds
 - **⚠️ Risk Analysis** - Detailed analysis by risk rating with statistics
 - **📥 Data Export** - Download filtered results as CSV
+
+### Fund Comparison Page
+- **🏆 Best & Worst Performers** - Dynamic cards showing top and bottom performing funds with color-coded metrics
+- **📈 Multi-Line Performance Chart** - Interactive Plotly chart showing performance across multiple time periods (YTD, 1M, 3M, 6M, 12M, 2Y, 3Y)
+- **🎨 Side-by-Side Comparison** - Compare multiple selected funds simultaneously
+- **💾 Fund Selection** - Multi-select functionality to choose funds for detailed comparison
+- **📊 Performance Metrics** - View detailed fund information including NAV, Category, and Risk levels
+
+### General Features
 - **🎨 Professional UI** - Clean, responsive design with modern styling
+- **🎯 Page-Specific Layouts** - Optimized sidebar visibility and navigation
+- **🔄 Smooth Navigation** - Native Streamlit multi-page routing without JavaScript dependencies
+- **⚡ Fast & Responsive** - Interactive elements with instant feedback
 
 ---
 
@@ -98,40 +111,52 @@ All mutual funds data is sourced from:
 
 ## 🎛️ Usage Guide
 
-### Filters
+### Dashboard Page
 1. **Search Fund Name** - Type to search for specific funds
 2. **Category Filter** - Select fund categories
 3. **Risk Level Filter** - Choose risk ratings (Very Low, Low, Medium, High)
 4. **NAV Range** - Adjust the slider for desired NAV range
 5. **Company Filter** - Filter by fund company/AMC
 
-### Tabs
+#### Tabs
 - **Data Table** - View paginated fund data with sorting and export
 - **Analytics** - Charts and visualizations of fund distributions
 - **By Risk** - Risk-based analysis and statistics
+
+### Fund Comparison Page
+1. **Select Funds** - Use the multiselect dropdown to choose funds for comparison
+2. **View Performance** - See real-time performance metrics across multiple time periods
+3. **Best & Worst Performers** - Instantly see which selected funds perform best and worst
+4. **Interactive Chart** - Hover over the performance chart to see exact values
+5. **Compare Details** - View detailed fund information including NAV, Category, and Risk
 
 ### Tips
 - **Smart Filtering** - Category and risk filters dynamically update based on selections
 - **Pagination** - Jump to any page or use previous/next buttons
 - **Export Data** - Download filtered results for further analysis
+- **Multi-Select** - Hold Ctrl/Cmd to select multiple funds for comparison
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Sarmaya.pk web scrapping/
+pakistan-mutual-funds-dashboard/
 │
-├── app.py                 # Main dashboard application
-├── config.py              # Configuration constants
-├── requirements.txt       # Python packages
-├── README.md             # This guide
+├── app.py                          # Main Dashboard application
+├── config.py                       # Configuration constants
+├── requirements.txt                # Python packages
+├── README.md                       # This guide
 │
-├── styles/               # CSS styling
-│   └── style.css         # Dashboard styling
+├── pages/
+│   └── Fund_Comparison.py          # Fund Comparison page (multi-page)
 │
-└── data/                 # Your data folder
-    └── funds_clean.csv   # Cleaned mutual funds data
+├── styles/
+│   └── style.css                   # Dashboard styling (CSS)
+│
+└── data/                           # Your data folder
+    ├── funds_clean.csv             # Cleaned mutual funds data
+    └── Performance Summary MUTUAL FUNDS ASSOCIATION OF PAKISTAN.csv
 ```
 
 ---
@@ -143,18 +168,24 @@ Sarmaya.pk web scrapping/
 - App auto-detects it
 - Refresh page if needed
 
-### 2. Explore with Filters
+### 2. Explore with Filters (Dashboard Page)
 - Click on sidebar filters
 - Select multiple options
-- Click "Apply Filters"
-- See results update instantly
+- Results update instantly
 
 ### 3. View Data
 - **Data Table Tab**: See all funds, sort, download
 - **Analytics Tab**: Charts and statistics
 - **By Risk Tab**: Risk-based analysis
 
-### 4. Download Results
+### 4. Compare Funds (Fund Comparison Page)
+- Click "Fund Comparison" button in navigation
+- Select multiple funds from dropdown
+- View performance across time periods
+- Compare best & worst performers
+- Hover on chart for detailed metrics
+
+### 5. Download Results
 - Use "Download Filtered Data as CSV" button
 - Gets your current filtered data
 - File saves as `filtered_funds.csv`
@@ -270,7 +301,18 @@ Dashboard automatically adjusts to screen size!
 
 ---
 
-## 🔐 Privacy & Security
+## 🌟 Key Improvements
+
+### Recent Updates
+- ✅ **Multi-Page Architecture** - Separate Dashboard and Fund Comparison pages
+- ✅ **Interactive Performance Charts** - Plotly-based multi-line charts showing time-series data
+- ✅ **Best & Worst Performers** - Dynamic cards calculating best and worst funds from selection
+- ✅ **Native Navigation** - Streamlit-native routing without JavaScript dependencies
+- ✅ **Responsive Design** - Equal-sized cards with proper flex layout
+- ✅ **Professional Styling** - Gradient backgrounds and high-contrast color schemes
+- ✅ **Code Cleanup** - Removed unused scripts and optimized performance
+
+
 
 ✅ Safe features:
 - All processing happens on YOUR computer

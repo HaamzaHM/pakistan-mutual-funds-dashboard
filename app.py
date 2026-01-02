@@ -307,6 +307,9 @@ def main():
     # Header - Compact version
     st.markdown("""
         <style>
+        /* Show Sidebar on Dashboard (default behavior) */
+        [data-testid="stSidebar"] { display: block !important; }
+        
         h1 { font-size: 24px !important; margin-bottom: 5px !important; }
         .metric-container {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
@@ -315,8 +318,51 @@ def main():
         }
         .metric-label { font-size: 10px !important; opacity: 0.9 !important; text-transform: uppercase; margin-bottom: 2px !important; }
         .metric-value { font-size: 16px !important; font-weight: bold !important; margin: 2px 0 !important; }
+        
+        /* Page Tab Switcher Styling */
+        .page-tab-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 0px;
+            margin-bottom: 20px;
+        }
+        .page-tab {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #e0e0e0;
+            color: #333;
+            border-radius: 0;
+        }
+        .page-tab:first-child {
+            border-radius: 8px 0 0 8px;
+        }
+        .page-tab:last-child {
+            border-radius: 0 8px 8px 0;
+        }
+        .page-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .page-tab:hover:not(.active) {
+            background-color: #d0d0d0;
+        }
         </style>
     """, unsafe_allow_html=True)
+    
+    # Page Tab Switcher UI with centered layout
+    nav_col1, nav_col2, nav_col3 = st.columns([1, 1, 1])
+    
+    with nav_col2:
+        col_dash, col_comp = st.columns(2, gap="small")
+        with col_dash:
+            st.button("📊 Dashboard", disabled=True, key="dash_disabled", use_container_width=True)
+        with col_comp:
+            if st.button("🔄 Fund Comparison", key="comp_nav", use_container_width=True):
+                st.switch_page("pages/Fund_Comparison.py")
     
     st.title("📊 Pakistan Mutual Funds Dashboard")
     st.markdown(f"<small>**Data Source:** {filename} | **Total Records:** {len(df)}</small>", unsafe_allow_html=True)

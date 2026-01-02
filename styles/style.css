@@ -3,6 +3,16 @@
     padding-top: 0.5rem;
 }
 
+/* Hide Sidebar Navigation (on all pages) */
+[data-testid="stSidebarNav"] {
+    display: none !important;
+}
+
+/* Note: Sidebar visibility is controlled per page:
+   - Dashboard (app.py): [data-testid="stSidebar"] { display: block !important; }
+   - Fund Comparison: [data-testid="stSidebar"] { display: none !important; }
+*/
+
 /* Title Styling */
 h1 {
     font-size: 24px !important;
@@ -45,6 +55,43 @@ h1 {
 
 .stTabs [data-baseweb="tab-list"] {
     gap: 15px !important;
+}
+
+/* Page Tab Switcher Styling */
+.page-tab-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+    margin-bottom: 20px;
+}
+
+.page-tab {
+    padding: 12px 30px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #e0e0e0;
+    color: #333;
+    border-radius: 0;
+}
+
+.page-tab:first-child {
+    border-radius: 8px 0 0 8px;
+}
+
+.page-tab:last-child {
+    border-radius: 0 8px 8px 0;
+}
+
+.page-tab.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.page-tab:hover:not(.active) {
+    background-color: #d0d0d0;
 }
 
 /* Pagination Styling */
