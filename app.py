@@ -301,9 +301,22 @@ def main():
         df['Risk Level'] = df[col_map['risk']].apply(convert_rating_to_risk_level)
         col_map['risk_level'] = 'Risk Level'  # Use converted column
     
-    # Header
+    # Header - Compact version
+    st.markdown("""
+        <style>
+        h1 { font-size: 24px !important; margin-bottom: 5px !important; }
+        .metric-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white; padding: 12px 15px !important; border-radius: 0.6rem !important;
+            margin: 2px 0 !important; text-align: center; font-size: 12px !important;
+        }
+        .metric-label { font-size: 10px !important; opacity: 0.9 !important; text-transform: uppercase; margin-bottom: 2px !important; }
+        .metric-value { font-size: 16px !important; font-weight: bold !important; margin: 2px 0 !important; }
+        </style>
+    """, unsafe_allow_html=True)
+    
     st.title("📊 Pakistan Mutual Funds Dashboard")
-    st.markdown(f"**Data Source:** {filename} | **Total Records:** {len(df)}")
+    st.markdown(f"<small>**Data Source:** {filename} | **Total Records:** {len(df)}</small>", unsafe_allow_html=True)
     
     # Initialize session state
     if 'category_filter' not in st.session_state:
@@ -464,8 +477,8 @@ def main():
         (filtered_df[nav_col] <= st.session_state.nav_range[1])
     ]
     
-    # Main content - Metrics
-    col1, col2, col3, col4 = st.columns(4)
+    # Main content - Metrics (Compact)
+    col1, col2, col3, col4 = st.columns(4, gap="small")
     
     with col1:
         st.markdown("""
@@ -502,20 +515,22 @@ def main():
             </div>
         """.format(min_nav), unsafe_allow_html=True)
     
-    st.markdown("---")
+    st.markdown("""<div style="margin-top: -10px; margin-bottom: 10px;"></div>""", unsafe_allow_html=True)
     
-    # Add custom CSS for bigger tabs
+    # Add custom CSS for tabs and spacing
     st.markdown("""
         <style>
         .stTabs [data-baseweb="tab-list"] button {
-            font-size: 18px !important;
-            padding: 15px 25px !important;
+            font-size: 16px !important;
+            padding: 12px 20px !important;
             font-weight: 600 !important;
             letter-spacing: 0.5px !important;
         }
         .stTabs [data-baseweb="tab-list"] {
-            gap: 20px !important;
+            gap: 15px !important;
         }
+        .main { padding-top: 0.5rem !important; }
+        [data-testid="stSelectbox"] label { display: none !important; }
         </style>
     """, unsafe_allow_html=True)
     
